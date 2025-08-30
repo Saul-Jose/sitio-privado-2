@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Completa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        h1, h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 50px 12px 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        input[type="text"]:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        
+        .menu-btn {
+            position: absolute;
+            right: 10px;
+            top: 35px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .menu-btn:hover {
+            background: #1976D2;
+        }
+        
+        .dropdown {
+            position: absolute;
+            right: 10px;
+            top: 70px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: none;
+            z-index: 1000;
+            min-width: 180px;
+        }
+        
+        .dropdown.show {
+            display: block;
+        }
+        
+        .dropdown-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .dropdown-item:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+        
+        .dropdown-item.active {
+            background-color: #e3f2fd;
+            color: #1976D2;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .calculation {
+            font-family: monospace;
+            font-size: 18px;
+            margin: 10px 0;
+            color: #333;
+        }
+        
+        .nf {
+            background-color: #e8f5e8;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .nr {
+            background-color: #e3f2fd;
+            color: #1565c0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #2196F3;
+        }
+        
+        .error {
+            color: #f44336;
+            font-weight: bold;
+        }
+        
+        .parte {
+            border: 3px solid #ddd;
+            border-radius: 10px;
+        }
+        
+        .parte1 {
+            border-color: #4CAF50;
+        }
+        
+        .parte2 {
+            border-color: #2196F3;
+        }
+        
+        .hidden {
+            display: none;
+        }
+
+        .derivados-system {
+            border-color: #ff9800;
+            background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+        }
+
+        .derivados-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .derivado-item {
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #ff9800;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.derivado-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.derivado-item.selected {
+    background: #e8f5e8;
+    border-left-color: #4CAF50;
+    transform: scale(1.02);
+}
+
+.derivado-item.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    color: #4CAF50;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.selection-mode {
+    background: linear-gradient(135deg, #fff3e0 0%, #e8f5e8 100%) !important;
+    border: 2px solid #4CAF50 !important;
+}
+
+        .derivado-label {
+            font-weight: bold;
+            color: #e65100;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .derivado-value {
+            font-size: 20px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .derivados-detalle {
+            background-color: #fff8e1;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #ff9800;
+        }
+
+        .derivado-paso {
+            font-family: monospace;
+            font-size: 16px;
+            margin: 5px 0;
+            color: #333;
+        }
+
+        @media (max-width: 600px) {
+            .derivados-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* ESTILOS CALCULADORA SIMPLE */
+        .calculadora-simple {
+            border-color: #9c27b0;
+            background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%);
+            max-width: 400px;
+            margin: 20px auto;
+        }
+
+        .calculadora-display {
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .display-operacion {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-size: 18px;
+            text-align: right;
+            padding: 5px;
+            color: #666;
+            margin-bottom: 5px;
+            min-height: 25px;
+        }
+
+        .display-resultado {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-size: 28px;
+            font-weight: bold;
+            text-align: right;
+            padding: 5px;
+            color: #333;
+            min-height: 35px;
+        }
+
+        .calculadora-botones {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .btn-calc {
+            height: 60px;
+            border: none;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .btn-numero {
+            background: #fff;
+            color: #333;
+        }
+
+        .btn-numero:hover {
+            background: #f5f5f5;
+            transform: translateY(-1px);
+        }
+
+        .btn-operador {
+            background: #9c27b0;
+            color: white;
+        }
+
+        .btn-operador:hover {
+            background: #7b1fa2;
+            transform: translateY(-1px);
+        }
+
+        .btn-igual {
+            background: #4CAF50;
+            color: white;
+            grid-row: span 2;
+        }
+
+        .btn-igual:hover {
+            background: #45a049;
+            transform: translateY(-1px);
+        }
+
+        .btn-clear {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-clear:hover {
+            background: #d32f2f;
+            transform: translateY(-1px);
+        }
+
+        .btn-cero {
+            grid-column: span 2;
+        }
+
+        .btn-calc:active {
+            transform: translateY(1px);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- PARTE 1: Calculadora Simple -->
+    <div class="container parte parte1" id="parte1">
+        <h1>PARTE 1 - Calculadora Simple</h1>
+        
+        <div class="input-group">
+            <label for="numeros">Números a sumar (ejemplo: 56+87+13+25):</label>
+            <input type="text" id="numeros" placeholder="56+87+13+25">
+        </div>
+        
+        <div class="input-group">
+            <label for="division">División automática del resultado:</label>
+            <input type="text" id="divisionCustom" placeholder="Ingrese divisor personalizado" style="display: none;">
+            <button class="menu-btn" onclick="toggleDropdown('dropdown3')">▼</button>
+            <div class="dropdown" id="dropdown3">
+                <div class="dropdown-item active" onclick="selectOption('dropdown3', '1220', this)">÷ 1220</div>
+                <div class="dropdown-item" onclick="selectOption('dropdown3', 'custom', this)">Agregar su propio ÷xxxx</div>
+            </div>
+        </div>
+        
+        <button onclick="calcularParte1()">Calcular y Continuar a Parte 2</button>
+        
+        <div id="resultado1" class="result" style="display: none;">
+            <h3>Resultado Parte 1:</h3>
+            <div id="calculo1" class="calculation"></div>
+            <div id="division1" class="calculation"></div>
+            <div id="decimal1" class="calculation" style="background-color: #fff3e0; padding: 10px; border-radius: 5px; margin-top: 10px;">
+                <strong>Decimal generado automáticamente:</strong> <span id="decimalGenerado"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PARTE 2: Suma de Dígitos -->
+    <div class="container parte parte2 hidden" id="parte2">
+        <h2>PARTE 2 - Suma de Dígitos</h2>
+        
+        <div class="input-group">
+            <label for="fecha">Fecha (DD/MM/YYYY):</label>
+            <input type="text" id="fecha" placeholder="Ejemplo: 07/01/2025">
+        </div>
+        
+        <div class="input-group">
+            <label for="decimal">Número decimal:</label>
+            <input type="text" id="decimal" placeholder="Ejemplo: 0.76974356" value="0.76974356">
+        </div>
+        
+        <button onclick="calcularParte2()">Calcular Suma de Dígitos</button>
+        
+        <div id="resultado2" class="result" style="display: none;">
+            <h3>Resultados:</h3>
+            <div id="calculoFecha" class="calculation"></div>
+            <div id="calculoDecimal" class="calculation"></div>
+            
+            <div class="nf" id="nfResult">
+                <strong>NF:</strong> <span id="nfValue"></span> → <span id="nfSimplificados" style="font-weight: bold;"></span>
+            </div>
+            
+            <div class="nr" id="nrResult">
+                <strong>NR:</strong> <span id="nrValue"></span> → <span id="nrSimplificados" style="font-weight: bold;"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SISTEMA DE DERIVADOS -->
+    <div class="container parte derivados-system hidden" id="sistemaderivados">
+        <h2>🔢 Sistema de Derivados</h2>
+        
+        <div id="derivadosDetalle" class="derivados-detalle">
+            <div id="detalleNF"></div>
+            <div id="detalleNR"></div>
+        </div>
+        
+        <div style="text-align: center; margin-bottom: 20px; padding: 15px; background: #e8f5e8; border-radius: 8px;">
+            <div style="margin-bottom: 10px;">
+                <strong>NF:</strong> <span id="nfDisplay">--</span> → <span id="nfCadenaDerivados">--</span> (Final: <span id="nfDerivado">--</span>)
+            </div>
+            <div>
+                <strong>NR:</strong> <span id="nrDisplay">--</span> → <span id="nrCadenaDerivados">--</span> (Final: <span id="nrDerivado">--</span>)
+            </div>
+        </div>
+<div style="text-align: center; margin-bottom: 15px;" id="botonesControl">
+    <button id="btnSeleccionar" onclick="activarModoSeleccion()" style="background: #2196F3; padding: 10px 20px; font-size: 16px; border-radius: 8px; color: white; border: none; cursor: pointer; margin-right: 10px;">🎯 Seleccionar Números</button>
+    <button id="btnCopiarSeleccionados" onclick="copiarSeleccionados()" style="background: #4CAF50; padding: 10px 20px; font-size: 16px; border-radius: 8px; color: white; border: none; cursor: pointer; display: none;">📋 Copiar Seleccionados</button>
+    <button id="btnCancelar" onclick="cancelarSeleccion()" style="background: #f44336; padding: 10px 20px; font-size: 16px; border-radius: 8px; color: white; border: none; cursor: pointer; display: none; margin-left: 10px;">❌ Cancelar</button>
+</div>
+<div style="margin-bottom: 15px; padding: 15px; background: #fff3e0; border-radius: 8px;">
+    <label>Operación personalizada:</label>
+    <input type="text" id="operacionCustom" placeholder="NF + NR + 2" style="width: 70%; padding: 8px; margin-right: 10px;">
+    <button onclick="agregarOperacion()" style="padding: 8px 15px; background: #ff9800; color: white; border: none; border-radius: 5px;">Agregar</button>
+</div>
+        <div class="derivados-grid" id="derivadosGrid">
+            <div class="derivado-item">
+                <div class="derivado-label">NF + NR</div>
+                <div class="derivado-value" id="nfPlusNr">--</div>
+            </div>
+            
+            <div class="derivado-item">
+                <div class="derivado-label">NF + Derivado NF</div>
+                <div class="derivado-value" id="nfPlusDerivado">--</div>
+            </div>
+            
+            <div class="derivado-item">
+                <div class="derivado-label">NF + 1</div>
+                <div class="derivado-value" id="nfPlus1">--</div>
+            </div>
+            
+            <div class="derivado-item">
+                <div class="derivado-label">NF - 1</div>
+                <div class="derivado-value" id="nfMinus1">--</div>
+            </div>
+            
+            <div class="derivado-item">
+                <div class="derivado-label">(NF - NR) - 1</div>
+                <div class="derivado-value" id="nfMinusNrMinus1">--</div>
+            </div>
+            
+            <div class="derivado-item">
+                <div class="derivado-label">(NF - NR) + 1</div>
+                <div class="derivado-value" id="nfMinusNrPlus1">--</div>
+            </div>
+            
+            <div class="derivado-item">
+                <div class="derivado-label">Derivado NF - 1</div>
+                <div class="derivado-value" id="derivadoNfMinus1">--</div>
+            </div>
+            
+            <div class="derivado-item">
+                <div class="derivado-label">Derivado NF + 1</div>
+                <div class="derivado-value" id="derivadoNfPlus1">--</div>
+            </div>
+            
+            <div class="derivado-item">
+                <div class="derivado-label">(NF + NR) - 1</div>
+                <div class="derivado-value" id="nfPlusNrMinus1">--</div>
+            </div>
+            
+            <div class="derivado-item">
+                <div class="derivado-label">(NF + NR) + 1</div>
+                <div class="derivado-value" id="nfPlusNrPlus1">--</div>
+            </div>
+            
+            <div class="derivado-item">
+                <div class="derivado-label">NR + 1</div>
+                <div class="derivado-value" id="nrPlus1">--</div>
+            </div>
+        </div>
+    </div>
+<!-- CALCULADORA SIMPLE -->
+    <div class="container parte calculadora-simple" id="calculadorasimple">
+        <h2>🧮 Calculadora Simple</h2>
+        
+        <div class="calculadora-display">
+            <input type="text" id="displayOperacion" class="display-operacion" placeholder="0" readonly>
+            <input type="text" id="displayResultado" class="display-resultado" placeholder="" readonly>
+        </div>
+        
+        <div class="calculadora-botones">
+            <button class="btn-calc btn-clear" onclick="limpiarCalculadora()">C</button>
+            <button class="btn-calc btn-clear" onclick="borrarUltimo()">⌫</button>
+            <button class="btn-calc btn-operador" onclick="agregarOperador('/')" data-op="÷">÷</button>
+            <button class="btn-calc btn-operador" onclick="agregarOperador('*')" data-op="×">×</button>
+            
+            <button class="btn-calc btn-numero" onclick="agregarNumero('7')">7</button>
+            <button class="btn-calc btn-numero" onclick="agregarNumero('8')">8</button>
+            <button class="btn-calc btn-numero" onclick="agregarNumero('9')">9</button>
+            <button class="btn-calc btn-operador" onclick="agregarOperador('-')">-</button>
+            
+            <button class="btn-calc btn-numero" onclick="agregarNumero('4')">4</button>
+            <button class="btn-calc btn-numero" onclick="agregarNumero('5')">5</button>
+            <button class="btn-calc btn-numero" onclick="agregarNumero('6')">6</button>
+            <button class="btn-calc btn-operador" onclick="agregarOperador('+')">+</button>
+            
+            <button class="btn-calc btn-numero" onclick="agregarNumero('1')">1</button>
+            <button class="btn-calc btn-numero" onclick="agregarNumero('2')">2</button>
+            <button class="btn-calc btn-numero" onclick="agregarNumero('3')">3</button>
+            <button class="btn-calc btn-igual" onclick="calcularResultado()" rowspan="2">=</button>
+            
+            <button class="btn-calc btn-numero btn-cero" onclick="agregarNumero('0')">0</button>
+            <button class="btn-calc btn-numero" onclick="agregarNumero('.')">.</button>
+        </div>
+    </div>
+    <script>
+        let opcionDivision = '1220';
+        let todosDerivadosNF = [];
+let todosDerivadosNR = [];
+
+        function toggleDropdown(id) {
+            const dropdown = document.getElementById(id);
+            const isShow = dropdown.classList.contains('show');
+            
+            // Cerrar todos los dropdowns
+            document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('show'));
+            
+            // Abrir el clickeado si no estaba abierto
+            if (!isShow) {
+                dropdown.classList.add('show');
+            }
+        }
+
+        function selectOption(dropdownId, option, element) {
+            // Remover active de todos los items del dropdown
+            document.querySelectorAll(`#${dropdownId} .dropdown-item`).forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Agregar active al seleccionado
+            element.classList.add('active');
+            
+            // Guardar la opción
+            if (dropdownId === 'dropdown3') {
+                opcionDivision = option;
+                
+                // Mostrar/ocultar campo personalizado
+                const customInput = document.getElementById('divisionCustom');
+                if (option === 'custom') {
+                    customInput.style.display = 'block';
+                    customInput.focus();
+                } else {
+                    customInput.style.display = 'none';
+                }
+            }
+            
+            // Cerrar dropdown
+            document.getElementById(dropdownId).classList.remove('show');
+        }
+
+        function calcularParte1() {
+            const numeros = document.getElementById('numeros').value;
+            const resultado1 = document.getElementById('resultado1');
+            const calculo1 = document.getElementById('calculo1');
+            const division1 = document.getElementById('division1');
+            const decimalGenerado = document.getElementById('decimalGenerado');
+
+            try {
+                // Extraer números de la expresión
+                const nums = numeros.match(/\d+/g);
+                if (!nums || nums.length === 0) {
+                    throw new Error('Debes ingresar números válidos');
+                }
+
+                let suma = 0;
+                let operacion = '';
+                
+                for (let i = 0; i < nums.length; i++) {
+                    suma += parseInt(nums[i]);
+                    operacion += nums[i];
+                    if (i < nums.length - 1) operacion += ' + ';
+                }
+
+                suma += 25;
+                operacion += ' + 25';
+
+                calculo1.innerHTML = `<strong>Suma:</strong> ${operacion} = ${suma}`;
+
+                // Realizar la división
+                let divisor;
+                if (opcionDivision === '1220') {
+                    divisor = 1220;
+                } else if (opcionDivision === 'custom') {
+                    const customValue = document.getElementById('divisionCustom').value;
+                    if (!customValue || isNaN(customValue) || parseFloat(customValue) === 0) {
+                        throw new Error('Debes ingresar un divisor válido');
+                    }
+                    divisor = parseFloat(customValue);
+                }
+
+                // Realizar división con alta precisión (16 decimales)
+                const decimal = (suma / divisor).toFixed(16);
+                
+                division1.innerHTML = `<strong>División:</strong> ${suma} ÷ ${divisor} = ${decimal}`;
+                decimalGenerado.textContent = decimal;
+
+                // Automáticamente colocar el decimal en la parte 2
+                document.getElementById('decimal').value = decimal;
+
+                resultado1.style.display = 'block';
+
+                // Mostrar parte 2 (sin scroll automático)
+                document.getElementById('parte2').classList.remove('hidden');
+
+                // Calcular automáticamente la parte 2
+                setTimeout(() => {
+                    calcularParte2();
+                }, 500);
+
+            } catch (error) {
+                calculo1.innerHTML = `<span class="error">Error: ${error.message}</span>`;
+                division1.innerHTML = '';
+                decimalGenerado.textContent = '';
+                resultado1.style.display = 'block';
+            }
+        }
+
+        function calcularParte2() {
+            const fecha = document.getElementById('fecha').value;
+            const decimal = document.getElementById('decimal').value;
+            const resultado2 = document.getElementById('resultado2');
+            const calculoFecha = document.getElementById('calculoFecha');
+            const calculoDecimal = document.getElementById('calculoDecimal');
+
+            try {
+                // Procesar la fecha
+                let digitosFecha = fecha.replace(/[^0-9]/g, '');
+                if (digitosFecha.length === 0) {
+                    throw new Error('La fecha debe contener números');
+                }
+
+                const sumaFecha = sumarDigitos(digitosFecha);
+                const operacionFecha = digitosFecha.split('').join(' + ');
+
+                calculoFecha.innerHTML = `<strong>Fecha:</strong> ${operacionFecha} = ${sumaFecha}`;
+
+                // Procesar el decimal
+                const digitosDecimal = decimal.replace(/[^0-9]/g, '');
+                if (digitosDecimal.length === 0) {
+                    throw new Error('El decimal debe contener números');
+                }
+
+                const sumaDecimal = sumarDigitos(digitosDecimal);
+                const operacionDecimal = digitosDecimal.split('').join(' + ');
+                calculoDecimal.innerHTML = `<strong>Decimal:</strong> ${operacionDecimal} = ${sumaDecimal}`;
+
+                // Mostrar NF y NR con simplificación completa
+                document.getElementById('nfValue').textContent = sumaFecha;
+                document.getElementById('nrValue').textContent = sumaDecimal;
+
+                // Obtener todos los pasos de simplificación
+                const pasos_nf = obtenerPasosSimplificacion(sumaFecha);
+                const pasos_nr = obtenerPasosSimplificacion(sumaDecimal);
+                
+                document.getElementById('nfSimplificados').textContent = pasos_nf.pasos_texto;
+                document.getElementById('nrSimplificados').textContent = pasos_nr.pasos_texto;
+
+                resultado2.style.display = 'block';
+
+                // Calcular derivados con el valor final correcto
+                calcularDerivados(sumaFecha, sumaDecimal, pasos_nf, pasos_nr);
+
+            } catch (error) {
+                calculoFecha.innerHTML = `<span class="error">Error: ${error.message}</span>`;
+                resultado2.style.display = 'block';
+            }
+        }
+
+        function calcularDerivados(nf, nr, pasos_nf, pasos_nr) {
+            // Obtener el último derivado (valor final)
+            const nfDerivado = pasos_nf.valor_final;
+            const nrDerivado = pasos_nr.valor_final;
+            // Guardar todos los derivados
+todosDerivadosNF = [nf].concat(pasos_nf.pasos);
+todosDerivadosNR = [nr].concat(pasos_nr.pasos);
+
+            // Mostrar detalle completo de los derivados
+            document.getElementById('detalleNF').innerHTML = `
+                <div class="derivado-paso"><strong>NF ${nf}:</strong> ${pasos_nf.detalle_completo}</div>
+            `;
+            document.getElementById('detalleNR').innerHTML = `
+                <div class="derivado-paso"><strong>NR ${nr}:</strong> ${pasos_nr.detalle_completo}</div>
+            `;
+
+            // Actualizar displays con la cadena completa de derivados
+            document.getElementById('nfDisplay').textContent = nf;
+            document.getElementById('nrDisplay').textContent = nr;
+            document.getElementById('nfDerivado').textContent = nfDerivado;
+            document.getElementById('nrDerivado').textContent = nrDerivado;
+            
+            // Mostrar la cadena completa de derivados
+            document.getElementById('nfCadenaDerivados').textContent = pasos_nf.pasos.length > 0 ? pasos_nf.pasos.join(' → ') : 'Ya es un dígito';
+            document.getElementById('nrCadenaDerivados').textContent = pasos_nr.pasos.length > 0 ? pasos_nr.pasos.join(' → ') : 'Ya es un dígito';
+
+            // Calcular todas las operaciones usando el derivado final correcto
+            document.getElementById('nfPlusNr').textContent = nf + nr;
+            document.getElementById('nfPlusDerivado').textContent = nf + nfDerivado;
+            document.getElementById('nfPlus1').textContent = nf + 1;
+            document.getElementById('nfMinus1').textContent = nf - 1;
+            document.getElementById('nfMinusNrMinus1').textContent = (nr - nf) - 1;
+            document.getElementById('nfMinusNrPlus1').textContent = (nr - nf) + 1;
+            document.getElementById('derivadoNfMinus1').textContent = nfDerivado - 1;
+            document.getElementById('derivadoNfPlus1').textContent = nfDerivado + 1;
+            document.getElementById('nfPlusNrMinus1').textContent = (nf + nr) - 1;
+            document.getElementById('nfPlusNrPlus1').textContent = (nf + nr) + 1;
+            document.getElementById('nrPlus1').textContent = nr + 1;
+
+            // Mostrar el sistema de derivados (sin scroll automático)
+            document.getElementById('sistemaderivados').classList.remove('hidden');
+        }
+
+        function sumarDigitos(numeroString) {
+            let suma = 0;
+            for (let i = 0; i < numeroString.length; i++) {
+                suma += parseInt(numeroString[i]);
+            }
+            return suma;
+        }
+
+        function obtenerPasosSimplificacion(numero) {
+            let actual = numero;
+            let pasos = [];
+            let detalle_pasos = [];
+            
+            while (actual >= 10) {
+                let digitos = actual.toString().split('');
+                let operacion = digitos.join(' + ');
+                let suma = 0;
+                for (let i = 0; i < digitos.length; i++) {
+                    suma += parseInt(digitos[i]);
+                }
+                pasos.push(suma);
+                detalle_pasos.push(`${actual} → ${operacion} = ${suma}`);
+                actual = suma;
+            }
+            
+            return {
+                valor_final: actual,
+                pasos: pasos,
+                pasos_texto: pasos.length > 0 ? pasos.join(' → ') : actual.toString(),
+                detalle_completo: detalle_pasos.length > 0 ? detalle_pasos.join(' → ') : `Ya es ${actual}`
+            };
+        }
+
+        // Cerrar dropdowns al hacer click fuera
+        document.addEventListener('click', function(event) {
+            if (!event.target.matches('.menu-btn') && !event.target.matches('.dropdown-item')) {
+                document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('show'));
+            }
+        });
+
+        // Auto-calcular parte 2 cuando se cambie el contenido
+        document.getElementById('fecha').addEventListener('input', calcularParte2);
+        document.getElementById('decimal').addEventListener('input', calcularParte2);
+        // FUNCIONES CALCULADORA SIMPLE
+        let operacionActual = '';
+        let resultadoActual = '';
+
+        function agregarNumero(numero) {
+            operacionActual += numero;
+            actualizarDisplay();
+        }
+
+        function agregarOperador(operador) {
+            if (operacionActual && !isNaN(operacionActual.slice(-1))) {
+                // Mostrar símbolo visual pero guardar operador real
+                let simboloVisual = operador;
+                if (operador === '*') simboloVisual = '×';
+                if (operador === '/') simboloVisual = '÷';
+                
+                operacionActual += operador;
+                document.getElementById('displayOperacion').value = operacionActual.replace(/\*/g, '×').replace(/\//g, '÷');
+            }
+        }
+
+        function calcularResultado() {
+            if (operacionActual) {
+                try {
+                    const resultado = eval(operacionActual);
+                    resultadoActual = resultado.toString();
+                    document.getElementById('displayResultado').value = resultadoActual;
+                } catch (error) {
+                    document.getElementById('displayResultado').value = 'Error';
+                }
+            }
+        }
+
+        function limpiarCalculadora() {
+            operacionActual = '';
+            resultadoActual = '';
+            document.getElementById('displayOperacion').value = '';
+            document.getElementById('displayResultado').value = '';
+        }
+
+        function borrarUltimo() {
+            operacionActual = operacionActual.slice(0, -1);
+            actualizarDisplay();
+        }
+
+        function actualizarDisplay() {
+            const displayVisual = operacionActual.replace(/\*/g, '×').replace(/\//g, '÷');
+            document.getElementById('displayOperacion').value = displayVisual;
+            document.getElementById('displayResultado').value = '';
+        }
+        let modoSeleccion = false;
+let numerosSeleccionados = new Set();
+
+function activarModoSeleccion() {
+    modoSeleccion = true;
+    numerosSeleccionados.clear();
+    
+    // Cambiar UI
+    document.getElementById('btnSeleccionar').style.display = 'none';
+    document.getElementById('btnCopiarSeleccionados').style.display = 'inline-block';
+    document.getElementById('btnCancelar').style.display = 'inline-block';
+    
+    // Agregar clase al contenedor
+    document.getElementById('sistemaderivados').classList.add('selection-mode');
+    
+    // Agregar event listeners a todos los derivado-item
+    const items = document.querySelectorAll('.derivado-item');
+    items.forEach((item, index) => {
+        item.addEventListener('click', () => seleccionarItem(item, index));
+        item.style.cursor = 'pointer';
+    });
+    
+    // También agregar a los items principales (NF y NR)
+    agregarSeleccionPrincipal();
+}
+
+function agregarSeleccionPrincipal() {
+    // Crear elementos seleccionables para NF y NR principales
+    const displayContainer = document.querySelector('#sistemaderivados > div:nth-child(2)');
+    const nfContainer = displayContainer.children[0];
+    const nrContainer = displayContainer.children[1];
+    
+    if (!nfContainer.classList.contains('seleccionable-agregado')) {
+        nfContainer.classList.add('seleccionable-agregado');
+        nfContainer.style.cursor = 'pointer';
+        nfContainer.style.padding = '10px';
+        nfContainer.style.borderRadius = '8px';
+        nfContainer.style.transition = 'all 0.3s ease';
+        nfContainer.addEventListener('click', () => seleccionarPrincipal('nf'));
+    }
+    
+    if (!nrContainer.classList.contains('seleccionable-agregado')) {
+        nrContainer.classList.add('seleccionable-agregado');
+        nrContainer.style.cursor = 'pointer';
+        nrContainer.style.padding = '10px';
+        nrContainer.style.borderRadius = '8px';
+        nrContainer.style.transition = 'all 0.3s ease';
+        nrContainer.addEventListener('click', () => seleccionarPrincipal('nr'));
+    }
+}
+
+function seleccionarPrincipal(tipo) {
+    if (!modoSeleccion) return;
+    
+    const displayContainer = document.querySelector('#sistemaderivados > div:nth-child(2)');
+    const container = tipo === 'nf' ? displayContainer.children[0] : displayContainer.children[1];
+    const key = tipo === 'nf' ? 'nf-principal' : 'nr-principal';
+    
+    if (numerosSeleccionados.has(key)) {
+        numerosSeleccionados.delete(key);
+        container.style.background = '';
+        container.style.transform = '';
+    } else {
+        numerosSeleccionados.add(key);
+        container.style.background = '#e8f5e8';
+        container.style.transform = 'scale(1.02)';
+    }
+    
+    actualizarBotonCopiar();
+}
+
+function seleccionarItem(item, index) {
+    if (!modoSeleccion) return;
+    
+    if (item.classList.contains('selected')) {
+        item.classList.remove('selected');
+        numerosSeleccionados.delete(index);
+    } else {
+        item.classList.add('selected');
+        numerosSeleccionados.add(index);
+    }
+    
+    actualizarBotonCopiar();
+}
+
+function actualizarBotonCopiar() {
+    const btn = document.getElementById('btnCopiarSeleccionados');
+    if (numerosSeleccionados.size > 0) {
+        btn.textContent = `📋 Copiar ${numerosSeleccionados.size} Seleccionados`;
+        btn.style.background = '#4CAF50';
+    } else {
+        btn.textContent = '📋 Copiar Seleccionados';
+        btn.style.background = '#ccc';
+    }
+}
+
+function copiarSeleccionados() {
+    if (numerosSeleccionados.size === 0) {
+        alert('Selecciona al menos un número para copiar');
+        return;
+    }
+    
+    const numeros = [];
+    
+    // Obtener números principales si están seleccionados
+    if (numerosSeleccionados.has('nf-principal')) {
+        const nf = document.getElementById('nfValue').textContent;
+        numeros.push(formatearNumero(nf));
+    }
+    
+    if (numerosSeleccionados.has('nr-principal')) {
+        const nr = document.getElementById('nrValue').textContent;
+        numeros.push(formatearNumero(nr));
+    }
+    
+    // Obtener números derivados seleccionados
+    // Obtener números derivados seleccionados (originales + personalizados)
+const todosLosItems = document.querySelectorAll('.derivado-item');
+todosLosItems.forEach((item, index) => {
+    if (numerosSeleccionados.has(index)) {
+        const valorElement = item.querySelector('.derivado-value');
+        if (valorElement) {
+            const valor = valorElement.textContent;
+            numeros.push(formatearNumero(valor));
+        }
+    }
+});
+    
+    const textoParaCopiar = numeros.join('\n');
+    
+    navigator.clipboard.writeText(textoParaCopiar).then(() => {
+        const btn = document.getElementById('btnCopiarSeleccionados');
+        const textoOriginal = btn.innerHTML;
+        btn.innerHTML = '✅ ¡Copiado!';
+        btn.style.background = '#4CAF50';
+        
+        setTimeout(() => {
+            cancelarSeleccion();
+        }, 1500);
+    }).catch(err => {
+        alert('Error al copiar: ' + err);
+    });
+}
+
+function cancelarSeleccion() {
+    modoSeleccion = false;
+    numerosSeleccionados.clear();
+    
+    // Restaurar UI
+    document.getElementById('btnSeleccionar').style.display = 'inline-block';
+    document.getElementById('btnCopiarSeleccionados').style.display = 'none';
+    document.getElementById('btnCancelar').style.display = 'none';
+    
+    // Remover clase del contenedor
+    document.getElementById('sistemaderivados').classList.remove('selection-mode');
+    
+    // Limpiar selecciones
+    document.querySelectorAll('.derivado-item').forEach(item => {
+        item.classList.remove('selected');
+        item.style.cursor = 'default';
+    });
+    
+    // Limpiar selecciones principales
+    const displayContainer = document.querySelector('#sistemaderivados > div:nth-child(2)');
+    if (displayContainer) {
+        Array.from(displayContainer.children).forEach(container => {
+            container.style.background = '';
+            container.style.transform = '';
+            container.style.cursor = 'default';
+        });
+    }
+}
+
+function formatearNumero(num) {
+    if (num === '--') return '--';
+    const numero = parseInt(num);
+    return numero < 10 ? '0' + numero : numero.toString();
+}
+function agregarOperacion() {
+    const input = document.getElementById('operacionCustom');
+    const operacion = input.value.trim().toUpperCase();
+    
+    if (!operacion) return;
+    
+    try {
+        const resultado = calcularOperacion(operacion);
+        
+        const nuevoDiv = document.createElement('div');
+        nuevoDiv.className = 'derivado-item';
+        nuevoDiv.innerHTML = `
+            <div class="derivado-label">${operacion} <span onclick="this.parentElement.parentElement.remove()" style="color: red; cursor: pointer; margin-left: 10px;">✕</span></div>
+            <div class="derivado-value">${resultado}</div>
+        `;
+        
+        document.getElementById('derivadosGrid').appendChild(nuevoDiv);
+        input.value = '';
+        
+    } catch (error) {
+        alert('Error: ' + error.message);
+    }
+}
+
+function calcularOperacion(operacion) {
+    const nf = parseInt(document.getElementById('nfValue').textContent);
+    const nr = parseInt(document.getElementById('nrValue').textContent);
+    
+    let expresion = operacion;
+    expresion = expresion.replace(/\bNF\b/g, nf);
+    expresion = expresion.replace(/\bNR\b/g, nr);
+    
+    // Para derivados: DNF1, DNF2, etc.
+    expresion = expresion.replace(/\bDNF(\d+)\b/g, function(match, num) {
+        const index = parseInt(num);
+        if (index > 0 && index < todosDerivadosNF.length) {
+            return todosDerivadosNF[index];
+        } else {
+            throw new Error(`DNF${num} no existe`);
+        }
+    });
+    
+    expresion = expresion.replace(/\bDNR(\d+)\b/g, function(match, num) {
+        const index = parseInt(num);
+        if (index > 0 && index < todosDerivadosNR.length) {
+            return todosDerivadosNR[index];
+        } else {
+            throw new Error(`DNR${num} no existe`);
+        }
+    });
+    
+    return eval(expresion);
+}
+    </script>
+</body>
+</html>
